@@ -1,10 +1,9 @@
-import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text>Welcome to the Home Page of Freshly</Text>
-      <Link href={"/about"}>About Screen</Link>
+      <Text className="text-white-50">Welcome to the Home Page of Freshly</Text>
+      {/* <Link href={"/about"}>About Screen</Link> --> This was only for the example of the working of react-native */}
     </View>
   );
 }
