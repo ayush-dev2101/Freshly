@@ -3,7 +3,7 @@ import { Redirect, Stack } from "expo-router";
 
 export default function AuthRoutesLayout() {
   const { isSignedIn, isLoaded } = useAuth();
-//If Clerk is not loaded wait 
+  //If Clerk is not loaded wait
   if (!isLoaded) {
     return null;
   }
@@ -11,5 +11,5 @@ export default function AuthRoutesLayout() {
   if (isSignedIn) {
     return <Redirect href={"/"} />;
   }
-  return <Stack />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
