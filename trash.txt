@@ -1,9 +1,0 @@
-To be done
-app.json -> 
-{
-  "expo": {
-    "web": {
-      "bundler": "metro"
-    }
-  }
-}

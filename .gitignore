@@ -44,3 +44,6 @@ example
 
 #environment Variable
 .env
+
+# text files
+*.txt
