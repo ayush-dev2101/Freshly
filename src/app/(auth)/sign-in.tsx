@@ -8,10 +8,10 @@ export default function SignInScreen() {
   const { handleSocialAuth, loadingStrategy } = useSocialAuth();
 
   const isGoogleClicked = loadingStrategy === "oauth_google";
-  // const isGitHubClicked = loadingStrategy === "oauth_github";
   const isAppleClicked = loadingStrategy === "oauth_apple";
+  const isXClicked = loadingStrategy === "oauth_x";
 
-  const isLoading = isGoogleClicked || isAppleClicked; //|| isGitHubClicked;
+  const isLoading = isGoogleClicked || isAppleClicked || isXClicked;
 
   return (
     <SafeAreaView
@@ -77,25 +77,31 @@ export default function SignInScreen() {
             {/* Arrow Icon from vector-icons*/}
             <FontAwesome name="angle-right" size={10} color="#5f6e66" />
           </Pressable>
-          {/* GitHub Button Position and Styling */}
-          {/* <Pressable
-            className={`mb-3 h-14 flex-row items-center rounded-2xl border border-border bg-card px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
+
+          {/* X Button Position and Styling */}
+          <Pressable
+            className={`mb-3 h-14 flex-row items-center rounded-2xl border border-border bg-card px-4 active:opacity-90 ${
+              isLoading ? "opacity-50" : ""
+            }`}
             disabled={isLoading}
-            onPress={() => handleSocialAuth("oauth_github")}
+            onPress={() => handleSocialAuth("oauth_x")}
           >
-            <View className="h-8 w-8 items-center rounded-full bg-white">
-              <FontAwesome name="github" size={24} color="#111" />
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-white">
+              <FontAwesome6 name="x-twitter" size={20} color="#111" />
             </View>
+
             <Text className="ml-3 flex-1 text-lg font-semibold text-card-foreground">
-              {isGitHubClicked
-                ? "Connecting GitHub..."
-                : "Continue with GitHub"}
+              {isXClicked ? "Connecting X..." : "Continue with X"}
             </Text>
+
             <FontAwesome name="angle-right" size={10} color="#5f6e66" />
-          </Pressable> */}
+          </Pressable>
+
           {/* Apple Button Position and Styling */}
           <Pressable
             className={`mb-3 h-14 flex-row items-center rounded-2xl border border-foreground bg-foreground px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
+            disabled={isLoading}
+            onPress={() => handleSocialAuth("oauth_apple")}
           >
             <View className="h-8 w-8 items-center justify-center rounded-full bg-white">
               <FontAwesome6 name="apple" size={22} color="#5f6e66" />

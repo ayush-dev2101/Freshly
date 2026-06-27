@@ -9,14 +9,15 @@ const useSocialAuth = () => {
 
   //Fixing the strategy to login/sign-up
   const handleSocialAuth = async (
-    strategy: "oauth_google" | "oauth_github" | "oauth_apple",
+    strategy: "oauth_google" | "oauth_x" | "oauth_apple",
   ) => {
-
-    if(loadingStrategy) return; //While loading any of the OAuth do nothing or do not load another OAuth
+    if (loadingStrategy) return; //While loading any of the OAuth do nothing or do not load another OAuth
     setLoadingStrategy(strategy); //this will set the strategy as per the user
 
     try {
-      const { createdSessionId, setActive } = await startSSOFlow({ strategy });
+      const result = await startSSOFlow({ strategy });
+      console.log(result);
+      const { createdSessionId, setActive } = result;
 
       //Logic for incomplete sign in or sign up
       if (!createdSessionId || !setActive) {
