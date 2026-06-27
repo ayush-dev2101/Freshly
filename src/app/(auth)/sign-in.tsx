@@ -1,20 +1,23 @@
 import useSocialAuth from "@/hooks/useSocialAuth";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {FontAwesome, FontAwesome6} from "@expo/vector-icons";
 
 export default function SignInScreen() {
   const { handleSocialAuth, loadingStrategy } = useSocialAuth();
 
   const isGoogleClicked = loadingStrategy === "oauth_google";
-  const isGithubClicked = loadingStrategy === "oauth_github";
+  const isGitHubClicked = loadingStrategy === "oauth_github";
   const isAppleClicked = loadingStrategy === "oauth_apple";
 
-  const isLoading = isGoogleClicked || isAppleClicked || isGithubClicked;
+  const isLoading = isGoogleClicked || isAppleClicked || isGitHubClicked;
 
   return (
-    <SafeAreaView className="flex-1 justify-center items-center bg-primary dark:bg-secondary" edges={["top"]}>
+    <SafeAreaView
+      className="flex-1 justify-center items-center bg-primary dark:bg-secondary"
+      edges={["top"]}
+    >
       {/* Circles in the background */}
       {/* Left Circle */}
       <View className="absolute-left-16 top-12 h-56 w-56 rounded-full bg-primary/80 dark:bg-background/40" />
@@ -67,34 +70,41 @@ export default function SignInScreen() {
               />
             </View>
             <Text className="ml-3 flex-1 text-lg font-semibold text-card-foreground">
-              {isGoogleClicked ? "Connecting Google..." : "Continue with Google"}
+              {isGoogleClicked
+                ? "Connecting Google..."
+                : "Continue with Google"}
             </Text>
             {/* Arrow Icon from vector-icons*/}
-            <FontAwesome name="angle-right" size={10} color="#5f6e66"/>
+            <FontAwesome name="angle-right" size={10} color="#5f6e66" />
           </Pressable>
           {/* GitHub Button Position and Styling */}
-          <Pressable className={`mb-3 h-14 flex-row items-center rounded-2xl border border-border bg-card px-4 active:opacity-50 ${isLoading ? "opacity-70": ""}`}
-          disabled={isLoading}
-          onPress={()=> handleSocialAuth("oauth_github")}
+          <Pressable
+            className={`mb-3 h-14 flex-row items-center rounded-2xl border border-border bg-card px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
+            disabled={isLoading}
+            onPress={() => handleSocialAuth("oauth_github")}
           >
             <View className="h-8 w-8 items-center rounded-full bg-white">
-              <FontAwesome name="github" size={24} color="#111"/>
+              <FontAwesome name="github" size={24} color="#111" />
             </View>
             <Text className="ml-3 flex-1 text-lg font-semibold text-card-foreground">
-              {isGithubClicked ? "Connecting GitHub..." : "Continue with GitHub"}
+              {isGitHubClicked
+                ? "Connecting GitHub..."
+                : "Continue with GitHub"}
             </Text>
-            <FontAwesome name="angle-right" size={10} color="#5f6e66"/>
+            <FontAwesome name="angle-right" size={10} color="#5f6e66" />
           </Pressable>
-            {/* Apple Button Position and Styling */}
-            <Pressable className={`mb-3 h-14 flex-row items-center rounded-2xl border border-foreground bg-foreground px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}>
-              <View className="h-8 w-8 items-center justify-center rounded-full bg-white">
-                <FontAwesome6 name="apple" size={22} color="#5f6e66"/>
-              </View>
-              <Text className="ml-3 flex-1 text-lg  font-semibold text-background">
-                {isAppleClicked ? "Connecting Apple..." : "Continue with Apple"}
-              </Text>
-              <FontAwesome name="angle-right" size={18} color="#5f6e66"/>
-            </Pressable>
+          {/* Apple Button Position and Styling */}
+          <Pressable
+            className={`mb-3 h-14 flex-row items-center rounded-2xl border border-foreground bg-foreground px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
+          >
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-white">
+              <FontAwesome6 name="apple" size={22} color="#5f6e66" />
+            </View>
+            <Text className="ml-3 flex-1 text-lg  font-semibold text-background">
+              {isAppleClicked ? "Connecting Apple..." : "Continue with Apple"}
+            </Text>
+            <FontAwesome name="angle-right" size={18} color="#5f6e66" />
+          </Pressable>
         </View>
         <Text className="mt-3 text-center text-sm leading-5 text-muted-foreground">
           By continuing, you agree to our Terms and Privacy Policy.
