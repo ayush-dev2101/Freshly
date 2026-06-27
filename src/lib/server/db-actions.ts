@@ -50,6 +50,23 @@ export const setGroceryItemPurchased = async (
   return rows[0];
 };
 
+export const updateGroceryItemQuantity = async (
+  id: string,
+  quantity: number,
+) => {
+  const rows = await db
+    .update(groceryItems)
+    .set({
+      quantity: Math.max(1, Math.floor(quantity)),
+      updated_at: Date.now(),
+    })
+    .where(eq(groceryItems.id, id))
+    .returning();
+
+  if (!rows.length) return null;
+  return rows[0];
+};
+
 export const deleteGroceryItem = async (id: string) => {
   await db.delete(groceryItems).where(eq(groceryItems.id, id));
 };

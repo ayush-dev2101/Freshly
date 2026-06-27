@@ -21,7 +21,7 @@
       "package": "com.ayushhdev2101.Grocery_App"
     },
     "web": {
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
