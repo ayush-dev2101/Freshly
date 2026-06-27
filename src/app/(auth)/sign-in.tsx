@@ -8,10 +8,10 @@ export default function SignInScreen() {
   const { handleSocialAuth, loadingStrategy } = useSocialAuth();
 
   const isGoogleClicked = loadingStrategy === "oauth_google";
-  const isGitHubClicked = loadingStrategy === "oauth_github";
+  // const isGitHubClicked = loadingStrategy === "oauth_github";
   const isAppleClicked = loadingStrategy === "oauth_apple";
 
-  const isLoading = isGoogleClicked || isAppleClicked || isGitHubClicked;
+  const isLoading = isGoogleClicked || isAppleClicked; //|| isGitHubClicked;
 
   return (
     <SafeAreaView
@@ -78,7 +78,7 @@ export default function SignInScreen() {
             <FontAwesome name="angle-right" size={10} color="#5f6e66" />
           </Pressable>
           {/* GitHub Button Position and Styling */}
-          <Pressable
+          {/* <Pressable
             className={`mb-3 h-14 flex-row items-center rounded-2xl border border-border bg-card px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
             disabled={isLoading}
             onPress={() => handleSocialAuth("oauth_github")}
@@ -92,7 +92,7 @@ export default function SignInScreen() {
                 : "Continue with GitHub"}
             </Text>
             <FontAwesome name="angle-right" size={10} color="#5f6e66" />
-          </Pressable>
+          </Pressable> */}
           {/* Apple Button Position and Styling */}
           <Pressable
             className={`mb-3 h-14 flex-row items-center rounded-2xl border border-foreground bg-foreground px-4 active:opacity-50 ${isLoading ? "opacity-70" : ""}`}
