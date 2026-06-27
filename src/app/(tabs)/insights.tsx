@@ -1,6 +1,5 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { useColorScheme } from "react-native";
+import TabScreenBackground from "@/components/TabScreenBackground";
+import { Text, useColorScheme, View } from "react-native";
 
 const InsightsScreen = () => {
   const colorScheme = useColorScheme();
@@ -9,8 +8,9 @@ const InsightsScreen = () => {
   return (
     <View className="flex-1 bg-background justify-center items-center">
       <Text className="text-foreground">InsightsScreen</Text>
+      <TabScreenBackground />
     </View>
-  )
-}
+  );
+};
 
-export default InsightsScreen
+export default InsightsScreen;
