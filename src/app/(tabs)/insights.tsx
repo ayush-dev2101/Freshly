@@ -1,15 +1,32 @@
+import ClearCompletedButton from "@/components/insights/ClearCompletedButton";
+import InsightsCategorySection from "@/components/insights/InsightsCategorySection";
+import InsightsPrioritySection from "@/components/insights/InsightsPrioritySection";
+import InsightsStatsSection from "@/components/insights/InsightsStatsSection";
+// import SentryFeedbackButton from "@/components/insights/SentryFeedbackButton";
+import UserProfile from "@/components/insights/UserProfile";
 import TabScreenBackground from "@/components/TabScreenBackground";
-import { Text, useColorScheme, View } from "react-native";
+import { ScrollView } from "react-native";
 
 const InsightsScreen = () => {
-  const colorScheme = useColorScheme();
-  console.log("RN colorScheme:", colorScheme);
-
   return (
-    <View className="flex-1 bg-background justify-center items-center">
-      <Text className="text-foreground">InsightsScreen</Text>
-      <TabScreenBackground />
-    </View>
+    <>
+      <ScrollView
+        className="flex-1 bg-background py-4"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ padding: 20, gap: 14 }}
+        contentInsetAdjustmentBehavior="automatic"
+      >
+        <TabScreenBackground />
+
+        <UserProfile />
+        <InsightsStatsSection />
+        <InsightsCategorySection />
+        <InsightsPrioritySection />
+        <ClearCompletedButton />
+      </ScrollView>
+      {/* To be included in future  */}
+      {/* <SentryFeedbackButton /> */}
+    </>
   );
 };
 
