@@ -1,6 +1,7 @@
 import { GroceryItem, useGroceryStore } from "@/store/grocery-store";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import { useAuth } from "@clerk/expo";
 
 const priorityPillBg = {
   low: "bg-priority-low",
@@ -16,13 +17,29 @@ const priorityPillText = {
 
 const PendingItemCard = ({ item }: { item: GroceryItem }) => {
   const { removeItem, updateQuantity, togglePurchased } = useGroceryStore();
+  const { getToken } = useAuth();
+
+  const handleToggle = async () => {
+    const token = await getToken();
+    if (token) await togglePurchased(item.id, token);
+  };
+
+  const handleRemove = async () => {
+    const token = await getToken();
+    if (token) await removeItem(item.id, token);
+  };
+
+  const handleUpdateQuantity = async (newQuantity: number) => {
+    const token = await getToken();
+    if (token) await updateQuantity(item.id, newQuantity, token);
+  };
 
   return (
     <View className="rounded-3xl border border-border bg-card p-4">
       <View className="flex-row items-start gap-3">
         <Pressable
           className="mt-1 size-6 items-center justify-center rounded-full border-2 border-border bg-card"
-          onPress={() => togglePurchased(item.id)}
+          onPress={handleToggle}
         ></Pressable>
 
         <View className="flex-1">
@@ -53,7 +70,7 @@ const PendingItemCard = ({ item }: { item: GroceryItem }) => {
             <Pressable
               className="h-8 w-8 items-center justify-center rounded-xl border border-border bg-muted"
               onPress={() =>
-                updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                handleUpdateQuantity(Math.max(1, item.quantity - 1))
               }
             >
               <FontAwesome6 name="minus" size={12} color="#3b5a4a" />
@@ -65,7 +82,7 @@ const PendingItemCard = ({ item }: { item: GroceryItem }) => {
 
             <Pressable
               className="h-8 w-8 items-center justify-center rounded-xl border border-border bg-muted"
-              onPress={() => updateQuantity(item.id, item.quantity + 1)}
+              onPress={() => handleUpdateQuantity(item.quantity + 1)}
             >
               <FontAwesome6 name="plus" size={12} color="#3b5a4a" />
             </Pressable>
@@ -74,7 +91,7 @@ const PendingItemCard = ({ item }: { item: GroceryItem }) => {
 
         <Pressable
           className="h-9 w-9 items-center justify-center rounded-xl bg-destructive"
-          onPress={() => removeItem(item.id)}
+          onPress={handleRemove}
         >
           <FontAwesome6 name="trash" size={13} color="#d45f58" />
         </Pressable>

@@ -1,45 +1,58 @@
 import { useGroceryStore } from "@/store/grocery-store";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import { useAuth } from "@clerk/expo";
 
-const CompletedItems = () => {
+export default function CompletedItems() {
   const { removeItem, togglePurchased, items } = useGroceryStore();
-  const completedItems = items.filter((item) => item.purchased);
+  const { getToken } = useAuth();
+  
+  const purchasedItems = items.filter((item) => item.purchased);
 
-  if (!completedItems.length) return null;
+  const handleToggle = async (id: string) => {
+    const token = await getToken();
+    if (token) await togglePurchased(id, token);
+  };
+
+  const handleRemove = async (id: string) => {
+    const token = await getToken();
+    if (token) await removeItem(id, token);
+  };
+
+  if (!purchasedItems.length) return null;
 
   return (
-    <View className="mt-3 rounded-3xl border border-border bg-secondary p-4">
-      <Text className="text-sm font-semibold uppercase tracking-[1px] text-secondary-foreground">
-        Completed
+    <View className="mb-4">
+      <Text className="ml-1 mt-4 text-sm font-semibold uppercase tracking-[1px] text-muted-foreground">
+        Completed ({purchasedItems.length})
       </Text>
-
-      {completedItems.map((item) => (
-        <View
-          key={item.id}
-          className="mt-3 flex-row items-center justify-between rounded-2xl border border-border bg-card px-3 py-2"
-        >
-          <View className="flex-row items-center gap-2">
-            <Pressable
-              onPress={() => togglePurchased(item.id)}
-              className="h-6 w-6 items-center justify-center rounded-full bg-primary"
-            >
-              <FontAwesome6 name="check" size={12} color="#ffffff" />
-            </Pressable>
-            <Text className="text-base text-muted-foreground line-through">
-              {item.name}
-            </Text>
-          </View>
-
-          <Pressable
-            onPress={() => removeItem(item.id)}
-            className="h-8 w-8 items-center justify-center rounded-xl bg-destructive"
+      <View className="mt-4 gap-3">
+        {purchasedItems.map((item) => (
+          <View
+            key={item.id}
+            className="flex-row items-center justify-between rounded-3xl border border-border bg-card p-4"
           >
-            <FontAwesome6 name="trash" size={12} color="#d45f58" />
-          </Pressable>
-        </View>
-      ))}
+            <View className="flex-1 flex-row items-center gap-3">
+              <Pressable
+                className="items-center justify-center rounded-full bg-primary p-2 opacity-70"
+                onPress={() => handleToggle(item.id)}
+              >
+                <FontAwesome6 name="check" size={14} color="#fff" />
+              </Pressable>
+              <Text className="text-base font-semibold text-muted-foreground line-through">
+                {item.name}
+              </Text>
+            </View>
+
+            <Pressable
+              className="px-2 py-1"
+              onPress={() => handleRemove(item.id)}
+            >
+              <FontAwesome6 name="trash" size={16} color="#7a9386" />
+            </Pressable>
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
-export default CompletedItems;

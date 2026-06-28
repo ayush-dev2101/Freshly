@@ -7,6 +7,8 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
+import { useAuth } from "@clerk/expo";
+
 const categories: GroceryCategory[] = [
   "Produce",
   "Dairy",
@@ -26,6 +28,7 @@ const categoryIcons = {
 
 const PlannerFormCard = () => {
   const { error, addItem } = useGroceryStore();
+  const { getToken } = useAuth();
 
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("1");
@@ -40,12 +43,15 @@ const PlannerFormCard = () => {
   };
 
   const createItem = async () => {
+    const token = await getToken();
+    if (!token) return;
+
     await addItem({
       name: name.trim(),
       category,
       priority,
       quantity: Number(quantity),
-    });
+    }, token);
 
     // Alert.alert("Success", "Item created");
 

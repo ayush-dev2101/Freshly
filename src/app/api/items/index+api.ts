@@ -1,10 +1,14 @@
 import { createGroceryItems, listGroceryItems } from "@/lib/server/db-actions";
+import { getUserId } from "@/lib/server/auth";
 
-export async function GET() {
-  //Database Call
+export async function GET(request: Request) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const items = await listGroceryItems();
-
+    const items = await listGroceryItems(userId);
     return Response.json({ items });
   } catch (error) {
     const message =
@@ -14,8 +18,12 @@ export async function GET() {
   }
 }
 
-//User passing the data and API ssending it to the database
 export async function POST(request: Request) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { name, category, quantity, priority } = body;
@@ -29,7 +37,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const item = await createGroceryItems({ name, category, quantity, priority });
+    const item = await createGroceryItems(userId, { name, category, quantity, priority });
 
     return Response.json({ item }, { status: 201 });
   } catch (error) {

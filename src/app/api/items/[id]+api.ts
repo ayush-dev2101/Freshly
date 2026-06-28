@@ -1,11 +1,17 @@
 import { deleteGroceryItem, setGroceryItemPurchased, updateGroceryItemQuantity } from "@/lib/server/db-actions";
+import { getUserId } from "@/lib/server/auth";
 
 export async function PATCH(request:Request, {id}: {id: string}) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
 
     const item = body.quantity
-    ? await updateGroceryItemQuantity(id, body.quantity) : await setGroceryItemPurchased(id, body.purchased ?? true);
+    ? await updateGroceryItemQuantity(userId, id, body.quantity) : await setGroceryItemPurchased(userId, id, body.purchased ?? true);
 
     if(!item) return Response.json({error: "Item not found"}, {status: 404});
     return Response.json({item});
@@ -15,9 +21,14 @@ export async function PATCH(request:Request, {id}: {id: string}) {
   }
 }
 
-export async function DELETE(_request: Request, { id }:{id: string}) {
+export async function DELETE(request: Request, { id }:{id: string}) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    await deleteGroceryItem(id);
+    await deleteGroceryItem(userId, id);
     return Response.json({ success: true });
   } catch (error) {
     const message =

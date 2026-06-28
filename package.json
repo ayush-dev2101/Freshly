@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@clerk/backend": "^3.8.4",
     "@clerk/expo": "^3.6.0",
     "@expo/ui": "~56.0.15",
     "@expo/vector-icons": "^15.0.2",
@@ -44,6 +45,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@types/node": "^26.0.1",
     "@types/react": "~19.2.2",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.0.0",

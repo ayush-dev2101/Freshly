@@ -31,12 +31,12 @@ type GroceryStore = {
   items: GroceryItem[];
   isLoading: boolean;
   error: string | null;
-  loadItems: () => Promise<void>;
-  addItem: (input: CreateItemInput) => Promise<GroceryItem | void>;
-  updateQuantity: (id: string, quantity: number) => Promise<void>;
-  togglePurchased: (id: string) => Promise<void>;
-  removeItem: (id: string) => Promise<void>;
-  clearPurchased: () => Promise<void>;
+  loadItems: (token: string) => Promise<void>;
+  addItem: (input: CreateItemInput, token: string) => Promise<GroceryItem | void>;
+  updateQuantity: (id: string, quantity: number, token: string) => Promise<void>;
+  togglePurchased: (id: string, token: string) => Promise<void>;
+  removeItem: (id: string, token: string) => Promise<void>;
+  clearPurchased: (token: string) => Promise<void>;
 };
 
 export const useGroceryStore = create<GroceryStore>((set, get) => ({
@@ -44,10 +44,12 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
   isLoading: false,
   error: null,
 
-  loadItems: async () => {
+  loadItems: async (token) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await fetch("/api/items");
+      const res = await fetch("/api/items", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       const payload = (await res.json()) as ItemsResponse;
 
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
@@ -60,12 +62,15 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
     }
   },
 
-  addItem: async (input) => {
+  addItem: async (input, token) => {
     set({ error: null });
     try {
       const res = await fetch("/api/items", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({
           name: input.name,
           category: input.category,
@@ -83,14 +88,17 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
       set({ error: "Something went wrong" });
     }
   },
-  updateQuantity: async (id, quantity) => {
+  updateQuantity: async (id, quantity, token) => {
     const nextQuantity = Math.max(1, quantity);
     set({ error: null });
 
     try {
       const res = await fetch(`/api/items/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ quantity: nextQuantity }),
       });
       const payload = (await res.json()) as ItemResponse;
@@ -106,7 +114,7 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
     }
   },
 
-  togglePurchased: async (id) => {
+  togglePurchased: async (id, token) => {
     const currentItem = get().items.find((item) => item.id === id);
     if (!currentItem) return;
 
@@ -115,7 +123,10 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
     try {
       const res = await fetch(`/api/items/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ purchased: nextPurchased }),
       });
 
@@ -133,10 +144,13 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
     }
   },
 
-  removeItem: async (id) => {
+  removeItem: async (id, token) => {
     set({ error: null });
     try {
-      const res = await fetch(`/api/items/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/items/${id}`, { 
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
 
       set((state) => ({ items: state.items.filter((item) => item.id !== id) }));
@@ -146,10 +160,13 @@ export const useGroceryStore = create<GroceryStore>((set, get) => ({
     }
   },
 
-  clearPurchased: async () => {
+  clearPurchased: async (token) => {
     set({ error: null });
     try {
-      const res = await fetch("/api/items/clear-purchased", { method: "POST" });
+      const res = await fetch("/api/items/clear-purchased", { 
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
 
       const items = get().items.filter((item) => !item.purchased);
